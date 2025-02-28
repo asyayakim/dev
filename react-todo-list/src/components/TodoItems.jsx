@@ -7,14 +7,13 @@ export default function TodoItems({data: {task, deleteTask, editTask}}) {
   const[updatedTaskName, setUpdatedTaskName] = useState(task.name);
   
   function changeCompleted () {
-    task.completed = !task.completed;
+    editTask(task.id, {...task, completed: !task.completed});
   }
   
   const formattedTime = task.timeStamp.toLocaleString("en-GB");
  function handleEditTask() {
-    setIsReadOnly(!isReadOnly);
     if(!isReadOnly) {
-      editTask(task.id, {...task, name: setUpdatedTaskName});
+      editTask(task.id, {...task, name: updatedTaskName});
     }
     setIsReadOnly(prev => !prev);
  }
@@ -22,14 +21,16 @@ export default function TodoItems({data: {task, deleteTask, editTask}}) {
   return (
     <li>
       <input
-
         type="checkbox"
         onChange={changeCompleted}
         checked={task.completed}
       />
       <p>{formattedTime}</p>
-      <input type="text" value={task.name} readOnly={isReadOnly} onChange={()=> setUpdatedTaskName(editTask.target.value)}/>
-      <button onClick={handleEditTask}>{}</button>
+      <input type="text"
+       value={updatedTaskName} 
+       readOnly={isReadOnly} 
+       onChange={e=> setUpdatedTaskName(e.target.value)}/>
+      <button onClick={handleEditTask}>{isReadOnly ? "Edit" : "Save"}</button>
       <button onClick={() => deleteTask(task.id)}>Delete</button>
     </li>
   );
